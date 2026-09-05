@@ -1,0 +1,188 @@
+
+.window {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  min-width: 320px;
+  min-height: 200px;
+  background: var(--surface);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-window), inset 0 1px 0 rgba(244, 236, 223, 0.06);
+  overflow: hidden;
+  z-index: 10;
+  animation: scale-in 0.22s ease;
+}
+
+.window::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  z-index: 2;
+  background: linear-gradient(90deg, transparent 8%, var(--accent-glow) 50%, transparent 92%);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.window.is-focused {
+  border-color: rgba(139, 155, 212, 0.5);
+  box-shadow: var(--shadow-focus), inset 0 1px 0 rgba(232, 236, 245, 0.08);
+}
+
+.window.is-maximized {
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+}
+
+.window__titlebar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 42px;
+  padding: 0 10px 0 14px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(20, 16, 9, 0.42);
+  cursor: grab;
+  user-select: none;
+}
+
+.window__titlebar:active {
+  cursor: grabbing;
+}
+
+.window__title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.window__title-icon {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  color: var(--accent);
+}
+
+.window__title-icon svg {
+  width: 15px;
+  height: 15px;
+}
+
+.window__title-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.is-focused .window__title-text {
+  color: var(--text-0);
+}
+
+.window__controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.window__control {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--text-2);
+  transition: background var(--transition), color var(--transition);
+}
+
+.window__control:hover {
+  background: var(--surface-active);
+  color: var(--text-0);
+}
+
+.window__control--close:hover {
+  background: var(--rose);
+  color: #0c0f16;
+}
+
+.window__body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.resize-handle {
+  position: absolute;
+  z-index: 5;
+}
+
+.resize-handle--n,
+.resize-handle--s {
+  left: 10px;
+  right: 10px;
+  height: 6px;
+  cursor: ns-resize;
+}
+.resize-handle--n {
+  top: -3px;
+}
+.resize-handle--s {
+  bottom: -3px;
+}
+
+.resize-handle--e,
+.resize-handle--w {
+  top: 10px;
+  bottom: 10px;
+  width: 6px;
+  cursor: ew-resize;
+}
+.resize-handle--e {
+  right: -3px;
+}
+.resize-handle--w {
+  left: -3px;
+}
+
+.resize-handle--ne,
+.resize-handle--nw,
+.resize-handle--se,
+.resize-handle--sw {
+  width: 14px;
+  height: 14px;
+}
+.resize-handle--ne {
+  top: -4px;
+  right: -4px;
+  cursor: nesw-resize;
+}
+.resize-handle--nw {
+  top: -4px;
+  left: -4px;
+  cursor: nwse-resize;
+}
+.resize-handle--se {
+  bottom: -4px;
+  right: -4px;
+  cursor: nwse-resize;
+}
+.resize-handle--sw {
+  bottom: -4px;
+  left: -4px;
+  cursor: nesw-resize;
+}

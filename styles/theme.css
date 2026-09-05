@@ -1,0 +1,86 @@
+
+:root {
+
+  --bg-0: #0b0d12;
+  --bg-1: #10131a;
+  --bg-2: #161a24;
+  --bg-3: #1c2130;
+
+  --surface: rgba(19, 23, 33, 0.78);
+  --surface-solid: #171b26;
+  --surface-hover: #202637;
+  --surface-active: #262e44;
+
+  --border: #262d3f;
+  --border-strong: #333c55;
+
+  --text-0: #e8ecf5;
+  --text-1: #a9b3cc;
+  --text-2: #6d7891;
+
+  --accent: #8b9bd4;
+  --accent-strong: #a3b1e2;
+  --accent-soft: rgba(139, 155, 212, 0.14);
+  --accent-glow: rgba(163, 177, 226, 0.38);
+
+  --teal: #7fd4a9;
+  --teal-glow: rgba(127, 212, 169, 0.5);
+
+  --rose: #e585a0;
+
+  --font-sans: "Space Grotesk", "Avenir Next", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --radius-sm: 5px;
+  --radius: 9px;
+  --radius-lg: 13px;
+
+  --shadow-window: 0 24px 60px rgba(0, 0, 0, 0.5), 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-focus: 0 24px 60px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(139, 155, 212, 0.28),
+    0 0 44px rgba(139, 155, 212, 0.14);
+
+  --statusbar-h: 40px;
+  --dock-w: 60px;
+
+  --transition: 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --transition-slow: 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-0);
+  background: var(--bg-0);
+  cursor: default;
+  user-select: none;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 6px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #46516f;
+  background-clip: content-box;
+}
