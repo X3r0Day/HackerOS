@@ -17,56 +17,6 @@
   inset: 0;
 }
 
-.desktop__icons {
-  position: absolute;
-  top: 56px;
-  right: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  z-index: 2;
-}
-
-.desk-icon {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 7px;
-  width: 82px;
-  padding: 12px 8px;
-  border-radius: var(--radius);
-  color: var(--text-1);
-  transition: background var(--transition), color var(--transition);
-  opacity: 0;
-  animation: rise 0.4s ease forwards;
-}
-
-.desk-icon:hover {
-  background: var(--accent-soft);
-  color: var(--text-0);
-}
-
-.desk-icon__glyph {
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  border-radius: 11px;
-  background: var(--surface-solid);
-  border: 1px solid var(--border);
-}
-
-.desk-icon__glyph svg {
-  width: 20px;
-  height: 20px;
-}
-
-.desk-icon__label {
-  font-size: 12px;
-  font-weight: 500;
-  text-align: center;
-}
-
 .statusbar {
   position: fixed;
   top: 0;

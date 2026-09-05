@@ -1,5 +1,5 @@
 
-import { getApp, iconSvg, buildAppContent, mountSystem } from "./apps.js";
+import { getApp, iconSvg, buildAppContent, mountSystem, mountFiles, mountEditor } from "./apps.js";
 import { mountTerminal } from "./terminal.js";
 import { clamp, bus } from "./system.js";
 
@@ -38,7 +38,7 @@ export function focusWindow(win) {
   win.classList.add("is-focused");
 }
 
-export function openApp(appId) {
+export function openApp(appId, options = {}) {
   const app = getApp(appId);
   if (!app) return null;
 
@@ -48,6 +48,11 @@ export function openApp(appId) {
       existing.style.display = "flex";
       existing.dataset.minimized = "false";
       existing.classList.remove("is-minimized");
+    }
+    if (options.file && appId === "editor") {
+      const body = existing.querySelector(".window__body");
+      body.innerHTML = buildAppContent(app);
+      mountEditor(body, options);
     }
     focusWindow(existing);
     const inp = existing.querySelector(".term__input");
@@ -90,6 +95,10 @@ export function openApp(appId) {
     });
   } else if (appId === "system") {
     mountSystem(body);
+  } else if (appId === "files") {
+    mountFiles(body, { openFile: (p) => openApp("editor", { file: p }) });
+  } else if (appId === "editor") {
+    mountEditor(body, options);
   } else if (appId === "welcome") {
     wireWelcome(win, body);
   }

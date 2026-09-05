@@ -1,5 +1,6 @@
 
 import { renderFetchInto } from "./fetch.js";
+import { getVFS } from "./vfs.js";
 
 export const APPS = [
   { id: "terminal", name: "Terminal", desc: "System shell", icon: "terminal", color: "#8b9bd4", w: 760, h: 470 },
@@ -19,114 +20,274 @@ export function iconSvg(name) {
   return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#icon-${name}"></use></svg>`;
 }
 
-const FILES_TREE = {
-  home: {
-    label: "Home",
-    icon: "files",
-    entries: [
-      { type: "dir", name: ".config", icon: "files" },
-      { type: "dir", name: "Documents", icon: "files" },
-      { type: "dir", name: "Downloads", icon: "files" },
-      { type: "dir", name: "projects", icon: "files" },
-      { type: "dir", name: "tools", icon: "files" },
-      { type: "file", name: "notes.txt", icon: "editor" },
-      { type: "file", name: ".bashrc", icon: "editor" },
-      { type: "file", name: "readme.md", icon: "editor" },
-      { type: "file", name: "keys.pub", icon: "editor" },
-    ],
-  },
-  root: {
-    label: "root",
-    icon: "files",
-    entries: [
-      { type: "dir", name: "bin", icon: "files" },
-      { type: "dir", name: "boot", icon: "files" },
-      { type: "dir", name: "dev", icon: "files" },
-      { type: "dir", name: "etc", icon: "files" },
-      { type: "dir", name: "home", icon: "files" },
-      { type: "dir", name: "usr", icon: "files" },
-      { type: "dir", name: "var", icon: "files" },
-      { type: "file", name: "init", icon: "editor" },
-    ],
-  },
-  projects: {
-    label: "projects",
-    icon: "files",
-    entries: [
-      { type: "dir", name: "kernel", icon: "files" },
-      { type: "dir", name: "shell", icon: "files" },
-      { type: "dir", name: "wm", icon: "files" },
-      { type: "file", name: "todo.md", icon: "editor" },
-      { type: "file", name: "Cargo.toml", icon: "editor" },
-    ],
-  },
-};
+const FILES_PLACES = [
+  { label: "Home", path: "/home/user", icon: "files" },
+  { label: "root", path: "/", icon: "files" },
+  { label: "projects", path: "/home/user/projects", icon: "files" },
+  { label: "tmp", path: "/tmp", icon: "files" },
+];
+
+function filesIconFor(name, type) {
+  if (type === "dir") return "files";
+  if (name.endsWith(".md")) return "editor";
+  return "editor";
+}
+
+export function mountFiles(body, hooks = {}) {
+  const vfs = getVFS();
+  let current = "/home/user";
+
+  const sidebar = body.querySelector(".files__sidebar");
+  const breadcrumb = body.querySelector(".files__crumb-wrap");
+  const grid = body.querySelector(".files__grid");
+  const toolbar = body.querySelector(".files__toolbar-path");
+
+  function refresh() {
+    try {
+      const { entries } = vfs.ls(current, "/home/user");
+      breadcrumb.innerHTML = "";
+      const segs = current.split("/").filter(Boolean);
+      let acc = "";
+      breadcrumb.append(makeCrumb("/", "root", segs.length === 0));
+      segs.forEach((seg, i) => {
+        acc += "/" + seg;
+        breadcrumb.append(makeCrumb(acc, seg, i === segs.length - 1));
+      });
+
+      grid.innerHTML = "";
+      entries.forEach((en) => {
+        const el = document.createElement("button");
+        el.className = `files__entry ${en.type === "file" ? "files__entry--file" : ""}`;
+        el.title = `double click to open ${en.name}`;
+        el.innerHTML = `
+          <div class="files__entry-icon">${iconSvg(filesIconFor(en.name, en.type))}</div>
+          <span class="files__entry-name">${en.name}</span>`;
+        el.addEventListener("dblclick", () => {
+          if (en.type === "dir") {
+            current = vfs.expand(en.name, current);
+            refresh();
+          } else {
+            hooks.openFile?.(vfs.expand(en.name, current));
+          }
+        });
+        grid.appendChild(el);
+      });
+    } catch {
+      grid.innerHTML = `<div class="files__empty">cannot open ${current}</div>`;
+    }
+
+    const crumbs = [...breadcrumb.children].map((c) => c.dataset.path);
+    toolbar.textContent = current;
+  }
+
+  function makeCrumb(path, label, last) {
+    const btn = document.createElement("button");
+    btn.className = `files__crumb${last ? " files__crumb--current" : ""}`;
+    btn.dataset.path = path;
+    btn.textContent = label;
+    btn.addEventListener("click", () => {
+      if (!last) {
+        current = path;
+        refresh();
+      }
+    });
+    return btn;
+  }
+
+  sidebar.querySelectorAll(".files__side-item").forEach((item) => {
+    item.addEventListener("click", () => {
+      current = item.dataset.path;
+      sidebar.querySelectorAll(".files__side-item").forEach((el) => el.classList.remove("is-active"));
+      item.classList.add("is-active");
+      refresh();
+    });
+  });
+
+  refresh();
+}
 
 function buildFiles() {
-  const entries = FILES_TREE.home.entries
-    .map(
-      (e) => `
-        <div class="files__entry ${e.type === "file" ? "files__entry--file" : ""}">
-          <div class="files__entry-icon">${iconSvg(e.icon)}</div>
-          <span class="files__entry-name">${e.name}</span>
-        </div>`
-    )
-    .join("");
+  const places = FILES_PLACES.map(
+    (p, i) => `
+      <button class="files__side-item ${i === 0 ? "is-active" : ""}" data-path="${p.path}">
+        ${iconSvg(p.icon)}${p.label}
+      </button>`
+  ).join("");
 
   return `
     <div class="files">
-      <div class="files__sidebar">
-        <div class="files__side-item is-active">${iconSvg("files")}Home</div>
-        <div class="files__side-item">${iconSvg("files")}root</div>
-        <div class="files__side-item">${iconSvg("files")}projects</div>
-        <div class="files__side-item">${iconSvg("editor")}Recent</div>
-      </div>
+      <div class="files__sidebar">${places}</div>
       <div class="files__main">
         <div class="files__toolbar">
-          <span class="files__crumb">/</span>
-          <span class="files__crumb">home</span>
-          <span class="files__crumb files__crumb--current">user</span>
+          <span class="files__toolbar-label">path</span>
+          <span class="files__toolbar-path mono"></span>
         </div>
-        <div class="files__grid">${entries}</div>
+        <div class="files__crumb-wrap"></div>
+        <div class="files__grid"></div>
       </div>
     </div>`;
 }
 
-const EDITOR_SAMPLE = `#!/usr/bin/env sh
-# HACKER//OS bootstrap stub
-set -e
+export function mountEditor(body, options = {}) {
+  const vfs = getVFS();
+  let currentPath = options.file || null;
+  let dirty = false;
+  let savedContent = "";
 
-echo "[boot] mounting virtual filesystems..."
-mount -t proc proc /proc
-mount -t sysfs sysfs /sys
-
-echo "[boot] starting display server..."
-/usr/bin/hos-display &
-
-echo "[boot] session ready."
-`;
-
-function buildEditor() {
-  const gutter = Array.from({ length: 18 }, (_, i) => i + 1).join("<br>");
-  return `
+  body.innerHTML = `
     <div class="editor">
       <div class="editor__toolbar">
-        <span class="editor__filename">init.sh</span>
-        <span>utf-8</span>
-        <span>sh</span>
-        <span>Ln 1, Col 1</span>
+        <button class="editor__menu" data-menu="new" title="New">new</button>
+        <button class="editor__menu" data-menu="open" title="Open">open</button>
+        <button class="editor__menu" data-menu="save" title="Save">save</button>
+        <button class="editor__menu" data-menu="saveas" title="Save as">save as</button>
+        <span class="editor__filename" title=""></span>
+        <span class="editor__dirty" title="unsaved changes"></span>
       </div>
-      <div class="editor__gutter-wrap">
-        <div class="editor__gutter">${gutter}</div>
-        <textarea class="editor__textarea" spellcheck="false">${EDITOR_SAMPLE.trim()}</textarea>
-      </div>
+      <textarea class="editor__textarea" spellcheck="false" placeholder="type here"></textarea>
       <div class="editor__status">
-        <span>sh</span>
-        <span>UTF-8</span>
-        <span>LF</span>
-        <span style="margin-left:auto">insert</span>
+        <span class="editor__path">untitled</span>
+        <span class="editor__pos">Ln 1, Col 1</span>
+        <span style="margin-left:auto" class="editor__mode">insert</span>
       </div>
     </div>`;
+
+  const textarea = body.querySelector(".editor__textarea");
+  const pathEl = body.querySelector(".editor__path");
+  const posEl = body.querySelector(".editor__pos");
+  const nameEl = body.querySelector(".editor__filename");
+  const dirtyEl = body.querySelector(".editor__dirty");
+
+  function markDirty() {
+    dirty = textarea.value !== savedContent;
+    body.classList.toggle("editor--dirty", dirty);
+  }
+
+  function renderName() {
+    if (!currentPath) {
+      nameEl.textContent = "untitled";
+      pathEl.textContent = "untitled";
+    } else {
+      const name = currentPath.split("/").pop();
+      nameEl.textContent = name;
+      nameEl.title = currentPath;
+      pathEl.textContent = currentPath;
+    }
+  }
+
+  function updatePos() {
+    const pos = textarea.selectionStart || 0;
+    const before = textarea.value.slice(0, pos);
+    const line = before.split("\n").length;
+    const col = pos - before.lastIndexOf("\n");
+    posEl.textContent = `Ln ${line}, Col ${col}`;
+  }
+
+  function doSave(as = false) {
+    if (as || !currentPath) {
+      const target = prompt("Save as (path)", currentPath || "~/notes.txt");
+      if (!target) return;
+      currentPath = vfs.expand(target, "/home/user");
+    }
+    try {
+      vfs.write(currentPath, "/home/user", textarea.value);
+      savedContent = textarea.value;
+      markDirty();
+      renderName();
+    } catch (e) {
+      alert(`save failed: ${e.message}`);
+    }
+  }
+
+  function loadFile(path) {
+    try {
+      const content = vfs.read(path, "/home/user");
+      currentPath = vfs.expand(path, "/home/user");
+      textarea.value = content.replace(/\n$/, "");
+      savedContent = textarea.value;
+      markDirty();
+      renderName();
+      updatePos();
+    } catch (e) {
+      alert(`open failed: ${e.message}`);
+    }
+  }
+
+  function showPicker() {
+    const existing = body.querySelector(".editor__picker");
+    if (existing) existing.remove();
+    const panel = document.createElement("div");
+    panel.className = "editor__picker";
+
+    const collect = (dir, out) => {
+      const { entries } = vfs.ls(dir, "/home/user");
+      entries.forEach((en) => {
+        if (en.type === "dir" && !en.name.startsWith(".")) {
+          collect(vfs.expand(en.name, dir), out);
+        } else if (en.type === "file" && !en.name.startsWith(".")) {
+          out.push(vfs.expand(en.name, dir));
+        }
+      });
+    };
+
+    const files = [];
+    collect("/home/user", files);
+    files.sort();
+
+    panel.innerHTML = `<div class="editor__picker-title">open file</div>`;
+    const list = document.createElement("div");
+    list.className = "editor__picker-list";
+    if (files.length === 0) {
+      list.innerHTML = `<div class="editor__picker-empty">no files found</div>`;
+    }
+    files.forEach((f) => {
+      const btn = document.createElement("button");
+      btn.className = "editor__picker-item";
+      btn.dataset.path = f;
+      btn.textContent = f;
+      btn.addEventListener("click", () => {
+        loadFile(f);
+        panel.remove();
+      });
+      list.appendChild(btn);
+    });
+    panel.appendChild(list);
+    body.appendChild(panel);
+  }
+
+  body.querySelector('[data-menu="new"]').addEventListener("click", () => {
+    currentPath = null;
+    textarea.value = "";
+    savedContent = "";
+    markDirty();
+    renderName();
+    updatePos();
+    textarea.focus();
+  });
+  body.querySelector('[data-menu="open"]').addEventListener("click", showPicker);
+  body.querySelector('[data-menu="save"]').addEventListener("click", () => doSave(false));
+  body.querySelector('[data-menu="saveas"]').addEventListener("click", () => doSave(true));
+
+  textarea.addEventListener("input", () => {
+    markDirty();
+    updatePos();
+  });
+  textarea.addEventListener("click", updatePos);
+  textarea.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
+      e.preventDefault();
+      doSave(false);
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "o") {
+      e.preventDefault();
+      showPicker();
+    }
+  });
+
+  if (currentPath) loadFile(currentPath);
+  renderName();
+  updatePos();
+  textarea.focus();
 }
 
 function buildNetwork() {
@@ -241,7 +402,7 @@ export function buildAppContent(app) {
     case "files":
       return buildFiles();
     case "editor":
-      return buildEditor();
+      return '<div class="editor" data-mount="editor"></div>';
     case "network":
       return buildNetwork();
     case "settings":

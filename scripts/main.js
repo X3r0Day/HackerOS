@@ -5,7 +5,6 @@ import { openApp, onAppsChange, getOpenApps, focusWindow } from "./window-manage
 import { clamp, pad, bootTime, formatUptime } from "./system.js";
 
 const dock = document.getElementById("dock");
-const desktopIcons = document.getElementById("desktop-icons");
 const launcher = document.getElementById("launcher");
 const launcherGrid = document.getElementById("launcher-grid");
 const launcherInput = document.getElementById("launcher-input");
@@ -30,19 +29,6 @@ function buildDock() {
       <span class="dock__indicator"></span>`;
     b.addEventListener("click", () => openApp(app.id));
     dock.appendChild(b);
-  });
-}
-
-function buildDesktopIcons() {
-  APPS.filter((a) => a.id !== "welcome").forEach((app, i) => {
-    const b = document.createElement("button");
-    b.className = "desk-icon";
-    b.style.animationDelay = `${i * 50}ms`;
-    b.innerHTML = `
-      <span class="desk-icon__glyph" style="color:${app.color}">${iconSvg(app.icon)}</span>
-      <span class="desk-icon__label">${app.name}</span>`;
-    b.addEventListener("click", () => openApp(app.id));
-    desktopIcons.appendChild(b);
   });
 }
 
@@ -120,7 +106,7 @@ function updateStats() {
 
 const desktopEl = document.getElementById("desktop");
 desktopEl.addEventListener("pointerdown", (e) => {
-  if (e.target === desktopEl || e.target === desktopIcons) {
+  if (e.target === desktopEl) {
     document
       .querySelectorAll(".window.is-focused")
       .forEach((w) => w.classList.remove("is-focused"));
@@ -165,7 +151,6 @@ document.addEventListener("keydown", (e) => {
 });
 
 buildDock();
-buildDesktopIcons();
 buildLauncher();
 
 updateClock();
