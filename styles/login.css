@@ -1,0 +1,148 @@
+.login {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--bg-0);
+  transition: opacity 0.45s ease, visibility 0.45s ease;
+}
+
+.login__wall {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(11, 13, 18, 0.42), rgba(11, 13, 18, 0.58)),
+    url("../assets/wallpaper/blue-girl.jpg");
+  background-position: center;
+  background-size: cover;
+  filter: blur(14px) saturate(1.05);
+  transform: scale(1.06);
+}
+
+.login__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+  padding: 34px 44px 30px;
+  border-radius: 16px;
+  background: rgba(19, 23, 33, 0.62);
+  border: 1px solid rgba(139, 155, 212, 0.18);
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
+  animation: scale-in 0.5s ease;
+}
+
+.login__logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.login__glyph {
+  font-size: 34px;
+  line-height: 1;
+  color: var(--accent);
+  text-shadow: 0 0 28px var(--accent-glow);
+}
+
+.login__name {
+  font-family: var(--font-sans);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-0);
+}
+
+.login__sep {
+  color: var(--accent);
+  font-weight: 400;
+}
+
+.login__user {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.login__avatar {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  font-family: var(--font-sans);
+  font-size: 24px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #0c0f16;
+  background: linear-gradient(180deg, var(--accent-strong), var(--accent));
+  box-shadow: 0 4px 18px rgba(139, 155, 212, 0.35);
+}
+
+.login__username {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-0);
+}
+
+.login__enter {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 20px;
+  border-radius: 10px;
+  border: 1px solid rgba(139, 155, 212, 0.28);
+  background: rgba(139, 155, 212, 0.1);
+  color: var(--text-0);
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.login__enter:hover {
+  background: rgba(139, 155, 212, 0.18);
+  border-color: rgba(139, 155, 212, 0.5);
+}
+
+.login__arrow {
+  font-family: var(--font-mono);
+  color: var(--accent);
+  font-size: 15px;
+}
+
+.login__label {
+  letter-spacing: 0.01em;
+}
+
+.login__footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 18px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 22px;
+  font-size: 12px;
+  color: rgba(200, 210, 228, 0.55);
+}
+
+.login__safe {
+  font-family: var(--font-mono);
+  color: var(--teal);
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 10px rgba(127, 212, 169, 0.4);
+}
+
+body.logged-in .login {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}

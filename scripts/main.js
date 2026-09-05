@@ -127,6 +127,29 @@ desktopEl.addEventListener("pointerdown", (e) => {
   }
 });
 
+const loginEl = document.getElementById("login");
+const loginEnter = document.getElementById("login-enter");
+let sessionStarted = false;
+
+function logIn() {
+  if (sessionStarted) return;
+  sessionStarted = true;
+  document.body.classList.add("logged-in");
+  setTimeout(() => loginEl.remove(), 600);
+  runBoot().then(() => {
+    document.body.classList.add("booted");
+    openApp("terminal");
+  });
+}
+
+loginEnter.addEventListener("click", logIn);
+loginEl.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") logIn();
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !sessionStarted) logIn();
+});
+
 launcherInput.addEventListener("input", () => filterLauncher(launcherInput.value));
 launcherInput.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeLauncher();
@@ -136,6 +159,7 @@ launcherInput.addEventListener("keydown", (e) => {
   }
 });
 document.querySelector(".launcher__backdrop").addEventListener("click", closeLauncher);
+
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeLauncher();
 });
@@ -148,9 +172,3 @@ updateClock();
 setInterval(updateClock, 1000);
 updateStats();
 setInterval(updateStats, 2000);
-
-runBoot().then(() => {
-  document.body.classList.add("booted");
-
-  openApp("terminal");
-});

@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="styles/layout.css" />
   <link rel="stylesheet" href="styles/windows.css" />
   <link rel="stylesheet" href="styles/apps.css" />
+  <link rel="stylesheet" href="styles/login.css" />
 </head>
 <body>
 
@@ -65,6 +66,30 @@
   </svg>
 
   <div class="grain" aria-hidden="true"></div>
+
+  <div id="login" class="login" aria-hidden="false">
+    <div class="login__wall" aria-hidden="true"></div>
+    <div class="login__card">
+      <div class="login__logo">
+        <div class="login__glyph">⌁</div>
+        <h1 class="login__name">HACKER<span class="login__sep">//</span>OS</h1>
+      </div>
+
+      <div class="login__user">
+        <div class="login__avatar">u</div>
+        <div class="login__username">user</div>
+      </div>
+
+      <button class="login__enter" id="login-enter" type="button">
+        <span class="login__arrow">↵</span>
+        <span class="login__label">press Enter to log in</span>
+      </button>
+    </div>
+    <div class="login__footer">
+      <span>Hacker OS · 2.5.7</span>
+      <span class="login__safe">you are in a safe space</span>
+    </div>
+  </div>
 
   <div id="boot" class="boot" aria-hidden="true">
     <div class="boot__inner">
@@ -114,4 +139,3 @@
   <script type="module" src="scripts/main.js"></script>
 </body>
 </html>
-
