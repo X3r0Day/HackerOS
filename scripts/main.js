@@ -19,7 +19,7 @@ function buildDock() {
   launcherBtn.addEventListener("click", toggleLauncher);
   dock.appendChild(launcherBtn);
 
-  APPS.forEach((app, i) => {
+  APPS.filter((a) => a.id !== "welcome").forEach((app, i) => {
     const b = document.createElement("button");
     b.className = "dock__item";
     b.dataset.app = app.id;
@@ -34,7 +34,7 @@ function buildDock() {
 }
 
 function buildDesktopIcons() {
-  APPS.forEach((app, i) => {
+  APPS.filter((a) => a.id !== "welcome").forEach((app, i) => {
     const b = document.createElement("button");
     b.className = "desk-icon";
     b.style.animationDelay = `${i * 50}ms`;
@@ -47,7 +47,7 @@ function buildDesktopIcons() {
 }
 
 function buildLauncher() {
-  APPS.forEach((app) => {
+  APPS.filter((a) => a.id !== "welcome").forEach((app) => {
     const b = document.createElement("button");
     b.className = "launcher__app";
     b.dataset.app = app.id;
@@ -138,7 +138,7 @@ function logIn() {
   setTimeout(() => loginEl.remove(), 600);
   runBoot().then(() => {
     document.body.classList.add("booted");
-    openApp("terminal");
+    openApp("welcome");
   });
 }
 

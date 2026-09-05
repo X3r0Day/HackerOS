@@ -90,6 +90,8 @@ export function openApp(appId) {
     });
   } else if (appId === "system") {
     mountSystem(body);
+  } else if (appId === "welcome") {
+    wireWelcome(win, body);
   }
 
   const rect = desktopEl().getBoundingClientRect();
@@ -97,10 +99,18 @@ export function openApp(appId) {
   const w = Math.min(app.w, rect.width - left - 24);
   const h = Math.min(app.h, rect.height - top - 24);
   const step = (openSeq++ % 9) * 26;
-  win.style.width = `${w}px`;
-  win.style.height = `${h}px`;
-  win.style.left = `${left + 24 + step}px`;
-  win.style.top = `${top + 24 + step}px`;
+
+  if (appId === "welcome") {
+    win.style.width = `${w}px`;
+    win.style.height = `${h}px`;
+    win.style.left = `${left + Math.max(20, (rect.width - left - w) / 2)}px`;
+    win.style.top = `${top + Math.max(16, (rect.height - top - h) / 2.4)}px`;
+  } else {
+    win.style.width = `${w}px`;
+    win.style.height = `${h}px`;
+    win.style.left = `${left + 24 + step}px`;
+    win.style.top = `${top + 24 + step}px`;
+  }
 
   windowsEl().appendChild(win);
   windows.set(appId, win);
@@ -131,6 +141,18 @@ function wireControls(win, appId) {
   win.querySelector(".window__titlebar").addEventListener("dblclick", (e) => {
     if (e.target.closest(".window__control")) return;
     toggleMaximize(win);
+  });
+}
+
+function wireWelcome(win, body) {
+  win.classList.add("window--welcome");
+  win.querySelector('[data-action="min"]').style.display = "none";
+  win.querySelector('[data-action="max"]').style.display = "none";
+  body.querySelector('[data-action="open-terminal"]').addEventListener("click", () => {
+    openApp("terminal");
+  });
+  body.querySelector('[data-action="open-system"]').addEventListener("click", () => {
+    openApp("system");
   });
 }
 

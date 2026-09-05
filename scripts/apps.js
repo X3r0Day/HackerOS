@@ -8,6 +8,7 @@ export const APPS = [
   { id: "network", name: "Network", desc: "Network monitor", icon: "network", color: "#7fd4a9", w: 640, h: 420 },
   { id: "settings", name: "Settings", desc: "System preferences", icon: "settings", color: "#98a6d8", w: 700, h: 480 },
   { id: "system", name: "System", desc: "System info", icon: "info", color: "#8b9bd4", w: 620, h: 500 },
+  { id: "welcome", name: "Welcome", desc: "Welcome screen", icon: "info", color: "#8b9bd4", w: 480, h: 400 },
 ];
 
 export function getApp(id) {
@@ -214,6 +215,27 @@ export function mountSystem(body) {
   if (el) renderFetchInto(el);
 }
 
+function buildWelcome() {
+  return `
+    <div class="welcome">
+      <div class="welcome__mark">
+        <div class="welcome__glyph">⌁</div>
+        <div class="welcome__name">HACKER<span>//</span>OS</div>
+      </div>
+      <div class="welcome__body">
+        <h2 class="welcome__hello">Welcome, user</h2>
+        <p class="welcome__text">
+          Hacker OS is a small desktop that lives in the browser. Look around,
+          open the terminal, read the files, see how the system is doing.
+        </p>
+      </div>
+      <div class="welcome__actions">
+        <button class="welcome__cta" data-action="open-terminal">open terminal</button>
+        <button class="welcome__cta welcome__cta--quiet" data-action="open-system">system info</button>
+      </div>
+    </div>`;
+}
+
 export function buildAppContent(app) {
   switch (app.id) {
     case "files":
@@ -226,6 +248,8 @@ export function buildAppContent(app) {
       return buildSettings();
     case "system":
       return buildSystem();
+    case "welcome":
+      return buildWelcome();
     case "terminal":
       return '<div class="term"></div>';
     default:
