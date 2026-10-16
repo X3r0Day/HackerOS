@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>start — HackerOS browser</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: #0b0d12;
+    color: #e8ecf5;
+    font-family: "Space Grotesk", system-ui, sans-serif;
+    display: grid;
+    place-items: center;
+    padding: 32px;
+  }
+  .card {
+    max-width: 560px;
+    width: 100%;
+    padding: 36px 40px;
+    background: #171b26;
+    border: 1px solid #333c55;
+    border-radius: 13px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  }
+  .mark {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+  .glyph { color: #7fd4a9; font-size: 22px; }
+  h1 { font-size: 22px; margin: 14px 0 6px; }
+  p { color: #a9b3cc; font-size: 14px; line-height: 1.6; }
+  .mono {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12.5px;
+    color: #7fd4a9;
+    background: rgba(127, 212, 169, 0.08);
+    padding: 8px 12px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+  small { color: #6d7891; font-size: 12px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="mark"><span class="glyph">⌁</span>HACKER OS</div>
+    <h1>Browser</h1>
+    <p>This is the browser start page. Right-click anywhere here — or on the
+    toolbar and status bar — the native menu is disabled and a custom one
+    takes its place: back, forward, reload, copy address, go to start.</p>
+    <div class="mono">pages/start.html · same origin</div>
+    <p><small>type a url in the address bar above, or stay a while.</small></p>
+  </div>
+</body>
+</html>

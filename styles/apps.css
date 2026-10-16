@@ -120,19 +120,21 @@
 
 .term__input-row {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 8px;
-  padding: 10px 16px;
-  border-top: 1px solid var(--border);
-  background: rgba(12, 15, 22, 0.62);
 }
 
 .term__input {
   flex: 1;
+  min-width: 0;
   font-family: var(--font-mono);
   font-size: 13px;
   color: var(--text-0);
   caret-color: var(--accent);
+  background: transparent;
+  border: 0;
+  outline: none;
+  padding: 0;
 }
 
 .files {

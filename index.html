@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="color-scheme" content="dark" />
-  <title>HACKER//OS</title>
+  <title>HACKER OS</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -19,7 +19,9 @@
   <link rel="stylesheet" href="styles/layout.css" />
   <link rel="stylesheet" href="styles/windows.css" />
   <link rel="stylesheet" href="styles/apps.css" />
+  <link rel="stylesheet" href="styles/browser.css" />
   <link rel="stylesheet" href="styles/login.css" />
+  <link rel="stylesheet" href="styles/context-menu.css" />
 </head>
 <body>
 
@@ -63,6 +65,10 @@
       <circle cx="11" cy="11" r="7" />
       <path d="M20 20l-3.6-3.6" />
     </symbol>
+    <symbol id="icon-globe" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M3.5 12h17M12 3.5c2.6 2.3 3.9 5.3 3.9 8.5s-1.3 6.2-3.9 8.5c-2.6-2.3-3.9-5.3-3.9-8.5S9.4 5.8 12 3.5z" />
+    </symbol>
   </svg>
 
   <div class="grain" aria-hidden="true"></div>
@@ -72,7 +78,7 @@
     <div class="login__card">
       <div class="login__logo">
         <div class="login__glyph">⌁</div>
-        <h1 class="login__name">HACKER<span class="login__sep">//</span>OS</h1>
+        <h1 class="login__name">HACKER OS</h1>
       </div>
 
       <div class="login__user">
@@ -95,7 +101,7 @@
     <div class="boot__inner">
       <div class="boot__logo">
         <div class="boot__glyph">⌁</div>
-        <h1 class="boot__name">HACKER<span class="boot__sep">//</span>OS</h1>
+        <h1 class="boot__name">HACKER OS</h1>
         <p class="boot__tag">starting up</p>
       </div>
       <div id="boot-log" class="boot__log"></div>
@@ -112,7 +118,7 @@
   <header class="statusbar">
     <div class="statusbar__left">
       <span class="statusbar__logo">⌁</span>
-      <span class="statusbar__word">HACKER<span class="statusbar__sep">//</span>OS</span>
+      <span class="statusbar__word">HACKER OS</span>
     </div>
     <div class="statusbar__right">
       <span class="statusbar__stat" id="stat-net"><span class="dot dot--ok"></span>link</span>
