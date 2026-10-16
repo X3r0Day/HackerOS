@@ -1,5 +1,6 @@
 
 import { APPS, iconSvg } from "./apps.js";
+import { initContextMenu } from "./context-menu.js";
 import { runBoot } from "./boot.js";
 import { openApp, onAppsChange, getOpenApps, focusWindow } from "./window-manager.js";
 import { clamp, pad, bootTime, formatUptime } from "./system.js";
@@ -152,6 +153,7 @@ document.addEventListener("keydown", (e) => {
 
 buildDock();
 buildLauncher();
+initContextMenu();
 
 updateClock();
 setInterval(updateClock, 1000);

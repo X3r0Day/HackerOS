@@ -1,4 +1,5 @@
 
+import { buildBrowser } from "./browser.js";
 import { renderFetchInto } from "./fetch.js";
 import { getVFS } from "./vfs.js";
 
@@ -6,6 +7,7 @@ export const APPS = [
   { id: "terminal", name: "Terminal", desc: "System shell", icon: "terminal", color: "#8b9bd4", w: 760, h: 470 },
   { id: "files", name: "Files", desc: "File explorer", icon: "files", color: "#a3b1e2", w: 820, h: 520 },
   { id: "editor", name: "Editor", desc: "Text editor", icon: "editor", color: "#7f93cf", w: 720, h: 500 },
+  { id: "browser", name: "Browser", desc: "Browse the net", icon: "globe", color: "#7fd4a9", w: 940, h: 580 },
   { id: "network", name: "Network", desc: "Network monitor", icon: "network", color: "#7fd4a9", w: 640, h: 420 },
   { id: "settings", name: "Settings", desc: "System preferences", icon: "settings", color: "#98a6d8", w: 700, h: 480 },
   { id: "system", name: "System", desc: "System info", icon: "info", color: "#8b9bd4", w: 620, h: 500 },
@@ -381,7 +383,7 @@ function buildWelcome() {
     <div class="welcome">
       <div class="welcome__mark">
         <div class="welcome__glyph">⌁</div>
-        <div class="welcome__name">HACKER<span>//</span>OS</div>
+        <div class="welcome__name">HACKER OS</div>
       </div>
       <div class="welcome__body">
         <h2 class="welcome__hello">Welcome, user</h2>
@@ -402,6 +404,8 @@ export function buildAppContent(app) {
     case "files":
       return buildFiles();
     case "editor":
+    case "browser":
+      return buildBrowser();
       return '<div class="editor" data-mount="editor"></div>';
     case "network":
       return buildNetwork();

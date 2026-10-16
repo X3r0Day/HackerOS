@@ -1,6 +1,7 @@
 
 import { getApp, iconSvg, buildAppContent, mountSystem, mountFiles, mountEditor } from "./apps.js";
 import { mountTerminal } from "./terminal.js";
+import { mountBrowser } from "./browser.js";
 import { clamp, bus } from "./system.js";
 
 const windowsEl = () => document.getElementById("windows");
@@ -99,6 +100,8 @@ export function openApp(appId, options = {}) {
     mountFiles(body, { openFile: (p) => openApp("editor", { file: p }) });
   } else if (appId === "editor") {
     mountEditor(body, options);
+  } else if (appId === "browser") {
+    mountBrowser(body);
   } else if (appId === "welcome") {
     wireWelcome(win, body);
   }

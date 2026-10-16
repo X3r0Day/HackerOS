@@ -39,13 +39,16 @@ export function mountTerminal(term, hooks = {}) {
   };
 
   term.innerHTML = `
-    <div class="term__output"></div>
-    <div class="term__input-row">
-      <span class="term__prompt">${promptText()}</span>
-      <input class="term__input" autocomplete="off" spellcheck="false" autocapitalize="off" />
+    <div class="term__output">
+      <div class="term__lines"></div>
+      <div class="term__input-row">
+        <span class="term__prompt">${promptText()}</span>
+        <input class="term__input" autocomplete="off" spellcheck="false" autocapitalize="off" />
+      </div>
     </div>`;
 
   const output = term.querySelector(".term__output");
+  const lines = term.querySelector(".term__lines");
   const input = term.querySelector(".term__input");
   const promptEl = term.querySelector(".term__prompt");
   const history = [];
@@ -61,7 +64,7 @@ export function mountTerminal(term, hooks = {}) {
     const row = document.createElement("div");
     if (cls) row.className = `term__line ${cls}`;
     else row.className = "term__line";
-    output.appendChild(row);
+    lines.appendChild(row);
     scroll();
     return row;
   }
@@ -93,7 +96,7 @@ export function mountTerminal(term, hooks = {}) {
   }
 
   function renderFetch() {
-    renderFetchInto(output).then(scroll);
+    renderFetchInto(lines).then(scroll);
   }
 
   function colorFor(name, type) {
@@ -325,7 +328,7 @@ export function mountTerminal(term, hooks = {}) {
         renderFetch();
         break;
       case "clear":
-        output.innerHTML = "";
+        lines.innerHTML = "";
         break;
       case "exit":
         hooks.close?.();
